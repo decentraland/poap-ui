@@ -1,7 +1,11 @@
 {
   "name": "poap-ui",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "private": true,
+  "engines": {
+    "node": "16.*",
+    "npm": "8.*"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
@@ -10,6 +14,7 @@
     "@types/node": "^16.7.13",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
+    "decentraland-ui": "^3.23.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
