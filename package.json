@@ -2,6 +2,7 @@
   "name": "poap-ui",
   "version": "0.0.0-development",
   "private": true,
+  "homepage": "/poap-ui/",
   "engines": {
     "node": "16.*",
     "npm": "8.*"
