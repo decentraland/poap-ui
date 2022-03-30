@@ -69,7 +69,7 @@ function App() {
       const coordinates = parseCoordinates(globalState.data.coordinates.split(';'))
       setState((current) => ({ ...current, coordinates }))
     }
-  }, [state.coordinates, globalState.data?.coordinates])
+  }, [globalState.data?.coordinates])
 
   useEffect(() => {
     if (!state.coordinates.length && !!globalState.data?.coordinates) {

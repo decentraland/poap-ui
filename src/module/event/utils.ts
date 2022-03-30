@@ -18,6 +18,8 @@ export function parseCoordinates(rawCoordinates: string[]): string[] {
           ) {
             return [x, y].join(',')
           }
+
+          return null
         })
         .filter(Boolean)
         .sort() as string[]
