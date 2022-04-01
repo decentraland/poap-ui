@@ -53,7 +53,7 @@ function App() {
   const handleEditCodeChange = useCallback((_, { value }) => setState((current) => ({ ...current, codeEdit: value })), [setState])
   const handleCoordinatesChange = useCallback((_, { value }) => setState((current) => ({ ...current, coordinates: value })), [setState])
   const handleImportEvents = useCallback(() => state.id && dispatch(requestEvent(state.id)), [state.id, dispatch])
-  const handleReset = useCallback(() => dispatch(resetAction()), [])
+  const handleReset = useCallback(() => dispatch(resetAction()), [ dispatch ])
   const handleUpdateCoordinates = useCallback(() => {
     if (state.id && state.codeEdit && state.coordinates.length > 0) {
       dispatch(updateEventCoordinates(state.id, state.codeEdit, state.coordinates))
