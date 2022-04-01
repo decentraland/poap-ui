@@ -6,13 +6,14 @@ import 'core-js/features/set-immediate'
 import 'balloon-css/balloon.min.css'
 import 'decentraland-ui/dist/themes/base-theme.css'
 import 'decentraland-ui/dist/themes/alternative/light-theme.css'
+import { Back } from 'decentraland-ui/dist/components/Back/Back'
 import { Navbar } from 'decentraland-ui/dist/components/Navbar/Navbar'
 import { Footer } from 'decentraland-ui/dist/components/Footer/Footer'
 import { Container } from 'decentraland-ui/dist/components/Container/Container'
 import { Button } from 'decentraland-ui/dist/components/Button/Button'
 import { Field } from 'decentraland-ui/dist/components/Field/Field'
 import { Loader } from 'decentraland-ui/dist/components/Loader/Loader'
-import { requestEvent, Step, updateEventCodes, updateEventCoordinates } from './module/event/actions';
+import { requestEvent, resetAction, Step, updateEventCodes, updateEventCoordinates } from './module/event/actions';
 import { EventState } from './module/event/reducer';
 import { parseCoordinates } from './module/event/utils';
 import PositionField from './components/PositionField';
@@ -52,6 +53,7 @@ function App() {
   const handleEditCodeChange = useCallback((_, { value }) => setState((current) => ({ ...current, codeEdit: value })), [setState])
   const handleCoordinatesChange = useCallback((_, { value }) => setState((current) => ({ ...current, coordinates: value })), [setState])
   const handleImportEvents = useCallback(() => state.id && dispatch(requestEvent(state.id)), [state.id, dispatch])
+  const handleReset = useCallback(() => dispatch(resetAction()), [])
   const handleUpdateCoordinates = useCallback(() => {
     if (state.id && state.codeEdit && state.coordinates.length > 0) {
       dispatch(updateEventCoordinates(state.id, state.codeEdit, state.coordinates))
@@ -77,9 +79,15 @@ function App() {
     }
   }, [state.coordinates, globalState.data?.coordinates, resetCoordinates])
 
+  useEffect(() => {
+    if (!globalState.id) {
+      setState(initialState)
+    }
+  }, [ globalState.id ])
+
   return <>
     <Navbar isFullscreen />
-    <Container style={{ height: '65vh', minHeight: '400px', position: 'relative', overflow: 'hidden' }}>
+    <Container className='step-container' >
 
       {/* INITIAL */}
       <div className={toStepClass(globalState.step, Step.Init)}>
@@ -101,6 +109,7 @@ function App() {
 
       {/* IMPORT EVENTS */}
       <div className={toStepClass(globalState.step, Step.ImportEvent)}>
+        <Back onClick={handleReset} />
         <Loader active={globalState.loading} />
         {!globalState.data && <>
           <h1>Import a new event from POAP</h1>
@@ -113,13 +122,15 @@ function App() {
 
       {/* UPDATE CODES */}
       <div className={toStepClass(globalState.step, Step.UpdateEvent)}>
+        <Back onClick={handleReset} />
         <Loader active={globalState.loading} />
         {globalState.data && <>
           <h2>{globalState.data.name}</h2>
           <p style={{ color: globalState.error ? 'red' : 'black', marginBottom: '2rem' }}>
             {globalState.error && globalState.error.message}
-            {globalState.newCodes === 0 && 'No new codes adds'}
-            {typeof globalState.newCodes === 'number' && `${globalState.newCodes} codes added`}
+            {globalState.newCodes === 0 && 'No new code was added'}
+            {typeof globalState.newCodes === 'number' && globalState.newCodes > 0  && `${globalState.newCodes} codes added`}
+            {' '}
           </p>
           <Field disabled={globalState.loading} value={state.codeEdit} label="Edit code" type="password" placeholder="******" onChange={handleEditCodeChange} />
           <PositionField disabled={globalState.loading} value={state.coordinates} label="Coordinates" onChange={handleCoordinatesChange} />

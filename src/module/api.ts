@@ -44,7 +44,10 @@ export type DecentralandEventUpdate= Pick<DecentralandEvent, 'coordinates'>
 export type DecentralandEventUpdateOptions<K extends keyof DecentralandEventUpdate = keyof DecentralandEventUpdate> = [K, DecentralandEvent[K]][]
 
 export type UpdateEventCodes = {
-  num: number
+  url: string,
+  body: {
+    num: number
+  }
 }
 
 export async function getDecentralandEvent(idOrUUID: string): Promise<DecentralandEvent> {

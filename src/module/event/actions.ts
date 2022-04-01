@@ -82,7 +82,7 @@ export const updateEventCodes = createThunk((id: string, editCode: string) => as
   await dispatch(updateEventCodesRequestAction(id, editCode))
   try {
     const data = await importEventCodes(id, editCode)
-    await dispatch(updateEventCodeSuccessAction(id, data.num))
+    await dispatch(updateEventCodeSuccessAction(id, data.body.num))
   } catch (err) {
     await dispatch(updateEventCodeFailedAction(err as Error))
   }
