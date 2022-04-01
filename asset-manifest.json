@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/poap-ui/static/css/main.a57c25af.css",
-    "main.js": "/poap-ui/static/js/main.473f1afc.js",
+    "main.css": "/poap-ui/static/css/main.abebcafd.css",
+    "main.js": "/poap-ui/static/js/main.c4e695c6.js",
     "index.html": "/poap-ui/index.html",
-    "main.a57c25af.css.map": "/poap-ui/static/css/main.a57c25af.css.map",
-    "main.473f1afc.js.map": "/poap-ui/static/js/main.473f1afc.js.map"
+    "main.abebcafd.css.map": "/poap-ui/static/css/main.abebcafd.css.map",
+    "main.c4e695c6.js.map": "/poap-ui/static/js/main.c4e695c6.js.map"
   },
   "entrypoints": [
-    "static/css/main.a57c25af.css",
-    "static/js/main.473f1afc.js"
+    "static/css/main.abebcafd.css",
+    "static/js/main.c4e695c6.js"
   ]
 }
