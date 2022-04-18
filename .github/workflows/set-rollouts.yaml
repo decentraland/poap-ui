@@ -46,3 +46,22 @@ jobs:
           deploymentDomain: 'poap.decentraland.today'
           deploymentName: '_site'
           percentage: 100
+
+      # Prd
+      - name: Set Rollout Prd
+        uses: decentraland/set-rollout-action@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+          # Repo deployment info
+          ref: ${{ github.event.deployment.ref }}
+          sha: ${{ github.event.deployment.sha }}
+
+          # CDN information
+          packageName: ${{ github.event.deployment.payload.packageName }}
+          packageVersion: ${{ github.event.deployment.payload.packageVersion }}
+
+          # Rollout information
+          deploymentDomain: 'poap.decentraland.org'
+          deploymentName: '_site'
+          percentage: 100
