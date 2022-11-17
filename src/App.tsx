@@ -13,7 +13,7 @@ import { Container } from 'decentraland-ui/dist/components/Container/Container'
 import { Button } from 'decentraland-ui/dist/components/Button/Button'
 import { Field } from 'decentraland-ui/dist/components/Field/Field'
 import { Loader } from 'decentraland-ui/dist/components/Loader/Loader'
-import { requestEvent, resetAction, Step, updateEventCodes, updateEventCoordinates } from './module/event/actions';
+import { importEvent, requestEvent, resetAction, Step, updateEventCodes, updateEventCoordinates } from './module/event/actions';
 import { EventState } from './module/event/reducer';
 import { parseCoordinates } from './module/event/utils';
 import PositionField from './components/PositionField';
@@ -33,8 +33,8 @@ function toStepClass(current: Step, activeOn: Step) {
 }
 
 type AppState = {
-  id: string | null,
-  codeEdit: string | null,
+  id: string,
+  codeEdit: string,
   coordinates: string[],
 }
 
@@ -42,6 +42,15 @@ const initialState: AppState = {
   id: '',
   codeEdit: '',
   coordinates: []
+}
+
+function canEdit(state: AppState) {
+  return Boolean(
+    state.id &&
+    state.codeEdit &&
+    state.coordinates &&
+    state.coordinates.length > 0
+  )
 }
 
 function App() {
@@ -52,13 +61,14 @@ function App() {
   const handleIdChange = useCallback((_, { value }) => setState((current) => ({ ...current, id: value })), [setState])
   const handleEditCodeChange = useCallback((_, { value }) => setState((current) => ({ ...current, codeEdit: value })), [setState])
   const handleCoordinatesChange = useCallback((_, { value }) => setState((current) => ({ ...current, coordinates: value })), [setState])
-  const handleImportEvents = useCallback(() => state.id && dispatch(requestEvent(state.id)), [state.id, dispatch])
-  const handleReset = useCallback(() => dispatch(resetAction()), [ dispatch ])
-  const handleUpdateCoordinates = useCallback(() => {
-    if (state.id && state.codeEdit && state.coordinates.length > 0) {
-      dispatch(updateEventCoordinates(state.id, state.codeEdit, state.coordinates))
+  const handleCheckEvent = useCallback(() => {
+    if (state.id) {
+      dispatch(requestEvent(state.id))
     }
-  }, [ state.id, state.codeEdit, state.coordinates, dispatch ])
+  }, [state.id, dispatch])
+  const handleImportEvent = useCallback(() => canEdit(state) && dispatch(importEvent(state.id, state.codeEdit, state.coordinates)), [state, dispatch])
+  const handleReset = useCallback(() => dispatch(resetAction()), [ dispatch ])
+  const handleUpdateCoordinates = useCallback(() => canEdit(state) && dispatch(updateEventCoordinates(state.id, state.codeEdit, state.coordinates)), [ state, dispatch ])
 
   const handleUpdateCodes = useCallback(() => {
     if (state.id && state.codeEdit) {
@@ -102,7 +112,7 @@ function App() {
         <div style={{ margin: '1rem' }}>
           <Field label="Event ID" type="number" placeholder="00000" value={state.id} onChange={handleIdChange} />
           <div style={{ textAlign: 'center' }}>
-            <Button primary style={{ margin: '1rem' }} disabled={!state.id} onClick={handleImportEvents}>start</Button>
+            <Button primary style={{ margin: '1rem' }} disabled={!state.id} onClick={handleCheckEvent}>start</Button>
           </div>
         </div>
       </div>
@@ -116,7 +126,7 @@ function App() {
           <p style={{ color: 'red', marginBottom: '2rem' }}>{globalState.error?.message || ''}</p>
           <Field disabled={globalState.loading} value={state.codeEdit} label="Edit code" type="password" placeholder="******" onChange={handleEditCodeChange} />
           <PositionField disabled={globalState.loading} value={state.coordinates} label="Coordinates" onChange={handleCoordinatesChange} />
-          <Button disabled={globalState.loading || !state.codeEdit || state.coordinates.length === 0} loading={globalState.loading} primary>IMPORT</Button>
+          <Button disabled={globalState.loading || !state.codeEdit || state.coordinates.length === 0} loading={globalState.loading} primary onClick={handleImportEvent}>IMPORT</Button>
         </>}
       </div>
 
